@@ -1,0 +1,97 @@
+ <header>
+       <nav class="navbar navbar-expand-lg navbar-light bg-dark text-light py-3 main-nav">
+        
+          <div class="container">
+              <a class="navbar-brand text-white" href="{% url 'Ops:index' %}">ScanOnline</a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                  <li class="nav-item active">
+                    <a class="nav-link text-uppercase text-white" href="{% url 'Ops:index' %}">Inicio<span class="sr-only">(current)</span></a>
+                  </li>
+                    <li class="nav-item active">
+                      <a class="nav-link text-uppercase text-white"  href="#" onclick="cerrarsesion()">Cerrar Sesion<span class="sr-only">(current)</span></a>
+                  </li>
+                </ul>
+              </div>
+          </div>
+        </nav>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <meta name="google-signin-scope" content="profile email">
+        <meta name="google-signin-client_id" content="582382088809-ier6oq9ok635b4opf16e69nm6cfksm8j.apps.googleusercontent.com">
+        <script type="text/javascript">
+          //Google Api init
+          function onSignIn(googleUser) {
+          // Useful data for your client-side scripts:
+          var profile = googleUser.getBasicProfile();
+          console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+          console.log('Full Name: ' + profile.getName());
+          console.log('Given Name: ' + profile.getGivenName());
+          console.log('Family Name: ' + profile.getFamilyName());
+          console.log("Image URL: " + profile.getImageUrl());
+          console.log("Email: " + profile.getEmail());
+
+          // The ID token you need to pass to your backend:
+          var id_token = googleUser.getAuthResponse().id_token;
+          console.log("ID Token: " + id_token);
+          if (id_token != null){
+          window.location.replace("https://cloud-scanner.herokuapp.com/mod_scanner");
+          }   
+        }
+        //FB Api init
+             window.fbAsyncInit = function() {
+              FB.init({
+                appId      : '745525443007721',
+                cookie : true, 
+                xfbml      : true,
+                version    : 'v2.2'
+              });
+
+            };//end of fbAsyncInit
+
+
+
+            (function(d, s, id){
+               var js, fjs = d.getElementsByTagName(s)[0];
+               if (d.getElementById(id)) {return;}
+               js = d.createElement(s); js.id = id;
+               js.src = "//connect.facebook.net/zh_TW/sdk.js";
+               fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+
+            function hello(){
+              FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                  alert("hello");
+                }
+              });
+            }
+            function fbLogoutUser() {
+                FB.getLoginStatus(function(response) {
+                    if (response && response.status === 'connected') {
+                        FB.logout(function(response) {
+                            document.location.reload();
+                            location.href ="{% url 'Ops:index' %}";
+                        });
+                    }
+                });
+            }
+            function signOutgoogle() {
+              var auth2 = gapi.auth2.getAuthInstance();
+              auth2.signOut().then(function () {
+                console.log('User signed out.');
+                document.location.reload();
+                location.href ="{% url 'Ops:index' %}";
+              });
+            }
+            function cerrarsesion(){
+              fbLogoutUser();
+              document.location.reload();
+              location.href ="{% url 'Ops:index' %}";
+
+            }
+        </script>
+    </header>
